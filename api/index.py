@@ -18,7 +18,7 @@ client: OpenAI = OpenAI()
 # route for getting all the todos
 @app.route("/api/todos", methods=["GET"])
 def get_todos():
-    return {"todos": todos, "message": "success", "status": 200}
+    return {"message": "success", "status": 200}
 
 
 # route for adding a todo
