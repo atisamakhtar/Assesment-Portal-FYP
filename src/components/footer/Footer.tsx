@@ -7,7 +7,7 @@ export default function Footer({}: Props) {
 
   return (
     <>
-      <footer className={css.foot} >I am a footer</footer>
+      <footer className={`text-center py-3 text-white bg-slate-900 ${css.foot}`} >&copy; 2024, All rights reserved</footer>
     </>
   )
 }

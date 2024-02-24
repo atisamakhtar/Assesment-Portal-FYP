@@ -6,7 +6,7 @@ type Props = {};
 export default function Navbar({}: Props) {
   return (
     <nav>
-      <ul className="flex gap-8">
+      <ul className="flex gap-8 text-white">
         <Link href={"/"}>
           <li>Product</li>
         </Link>
