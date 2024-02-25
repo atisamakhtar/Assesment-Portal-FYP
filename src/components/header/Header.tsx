@@ -7,16 +7,16 @@ type Props = {};
 
 export default function Header({}: Props) {
   return (
-    <header className="py-4 px-6 flex justify-between items-center bg-gray-100 shadow-md">
+    <header className="py-4 px-6 flex justify-between items-center bg-slate-900 shadow-md">
       <div className="text-lg font-bold">
-        <Link href={"/"}>QuizGenie</Link>
+        <Link className="text-white" href={"/"}>Self Assessment Portal</Link>
       </div>
 
       <Navbar />
 
       <div className="flex gap-2">
-        <Button variant={"default"} asChild><Link href={"/sign-up"}>Sign Up Free</Link></Button>
-        <Button variant={"ghost"} asChild><Link href={"/login"}>Login</Link></Button>
+        <Button variant={"onDark"} asChild><Link href={"/sign-up"}>Sign Up Free</Link></Button>
+        <Button variant={"onDark"} asChild><Link href={"/login"}>Login</Link></Button>
       </div>
     </header>
   );
