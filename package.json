@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "concurrently": "^8.2.2",
+    "embla-carousel-react": "^8.0.0",
     "lucide-react": "^0.293.0",
     "next": "14.0.3",
     "react": "^18",
