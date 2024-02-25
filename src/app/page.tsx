@@ -42,7 +42,7 @@ export default function Home() {
         </CarouselContent>
       </Carousel>
 
-      <section className="p-6 container mx-auto px-4 my-12">
+      <section id="about" className="p-6 container mx-auto px-4 my-12">
         <div className="md:flex items-center justify-between">
           <div className="w-[50%] pt-8 pl-6">
             <div className="sm:mb-4" >
@@ -82,16 +82,16 @@ export default function Home() {
         <PricingTable />
       </section>
 
-      <section className="my-14 p-6 container mx-auto px-4 grid grid-cols-2 gap-4">
+      <section className="my-14 p-6 container mx-auto px-4 md:grid md:grid-cols-3 gap-4">
 
-        <div className="col-span-1" >
+        <section className="py-10 md:mb-0 mb-8 col-span-1 bg-slate-900 px-8" >
           <ContactDetails />
-        </div>
-        
-        <div className="col-span-2" >
+        </section>
+
+        <section className="col-span-2" >
           <h2 className="text-[30px] px-3 font-semibold mb-8" >Get in touch!</h2>
           <ContactForm />
-        </div>
+        </section>
 
       </section>
 
