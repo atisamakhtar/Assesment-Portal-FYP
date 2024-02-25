@@ -10,7 +10,7 @@ export default function Navbar({}: Props) {
         <Link href={"/"}>
           <li>Product</li>
         </Link>
-        <Link href={"/"}>
+        <Link href={"/pricing"}>
           <li>Pricing</li>
         </Link>
         <Link href={"/"}>
