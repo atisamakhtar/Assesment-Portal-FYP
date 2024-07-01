@@ -1,28 +1,51 @@
+// Header.tsx
+'use client';
 import React from "react";
 import { Button } from "../ui/button";
 import Navbar from "./Navbar";
 import Link from "next/link";
-import Topbar from "./topbar";
+import { useUser } from "@/store/useUserStore";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
-export default function Header({ }: Props) {
-    return (
-        <>
-            {/* <Topbar></Topbar>   */}
-            {/* <header className="z-1 sticky top-0 left-0 py-4 px-6 flex justify-between items-center bg-slate-900 shadow-md"> */}
-            <header className="py-4 px-6 flex justify-between items-center bg-slate-900 shadow-md">
-                <div className="text-lg font-bold">
-                    <Link className="text-white" href={"/"}>Self Assessment Portal</Link>
-                </div>
+export default function Header({}: Props) {
+  const { user, fetchUserDataLoading, logout } = useUser();
+  const router = useRouter();
 
-                <Navbar />
+  const handleLogout = async () => {
+    await logout(router);
+  };
 
-                <div className="flex gap-2">
-                    <Button variant={"onDark"} asChild><Link href={"/sign-up"}>Sign Up Free</Link></Button>
-                    <Button variant={"onDark"} asChild><Link href={"/login"}>Login</Link></Button>
-                </div>
-            </header>
-        </>
-    );
+  return (
+    <>
+      <header className="py-4 px-6 flex justify-between items-center bg-slate-900 shadow-md">
+        <div className="text-lg font-bold">
+          <Link className="text-white" href={"/"}>Self Assessment Portal</Link>
+        </div>
+
+        <Navbar />
+
+        <div className="flex gap-2">
+          {fetchUserDataLoading ? (
+            <p>Loading...</p>
+          ) : user ? (
+            <>
+              <Button variant={"onDark"}>{user.fullName}</Button>
+              <Button variant={"onDark"} onClick={handleLogout}>Logout</Button>
+            </>
+          ) : (
+            <>
+              <Button variant={"onDark"} asChild>
+                <Link href={"/sign-up"}>Sign Up Free</Link>
+              </Button>
+              <Button variant={"onDark"} asChild>
+                <Link href={"/login"}>Login</Link>
+              </Button>
+            </>
+          )}
+        </div>
+      </header>
+    </>
+  );
 }
