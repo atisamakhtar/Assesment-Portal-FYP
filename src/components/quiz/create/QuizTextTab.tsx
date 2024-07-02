@@ -34,12 +34,21 @@ export default function QuizTextTab({ value,quizData,loading }: Props) {
     resolver: zodResolver(textFormSchema),
   });
   const [charCount, setCharCount] = useState(0);
+
   const handleCharCount = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCharCount(event.currentTarget.value.length);
   };
+
+  const saveToLocalStorage = (data: TextFormSchemaType) => {
+    localStorage.setItem('quizSelections', JSON.stringify(data));
+  };
+
+
   async function onSubmit(data: TextFormSchemaType) {
     const fullData : quizType = {...data, quizOption: "text"};
     loading(true);
+
+    saveToLocalStorage(fullData)
     const reponse = await fetch("/api/create-quiz", {
       method: "POST",
       headers: {

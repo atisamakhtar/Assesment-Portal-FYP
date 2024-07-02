@@ -37,9 +37,15 @@ export default function QuizTopicTab({ value,quizData,loading }: Props) {
   const form = useForm<TextFormSchemaType>({
     resolver: zodResolver(textFormSchema),
   });
+
+  const saveToLocalStorage = (data: TextFormSchemaType) => {
+    localStorage.setItem('quizSelections', JSON.stringify(data));
+  };
   async function onSubmit(data: TextFormSchemaType) {
     const fullData : quizType = {...data, quizOption: "topic"};
     loading(true);
+
+    saveToLocalStorage(fullData)
     const reponse = await fetch("/api/create-quiz", {
       method: "POST",
       headers: {
