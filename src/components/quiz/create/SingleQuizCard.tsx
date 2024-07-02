@@ -1,24 +1,22 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup } from "@/components/ui/radio-group";
-import React from "react";
 import SingleQuizCardOption from "./SingleQuizCardOption";
+import React from "react";
 
 type Props = {
   question: string;
   questionNo: number;
   options?: string[];
-  showAnwser: boolean;
-  correctAnswer: string;
-  answerExplain: string;
+  onAnswerChange: (questionNo: number, answer: string) => void;
+  selectedAnswer?: string;
 };
 
 export default function SingleQuizCard({
   question,
   options,
   questionNo,
-  showAnwser,
-  correctAnswer,
-  answerExplain,
+  onAnswerChange,
+  selectedAnswer,
 }: Props) {
   return (
     <Card className="mb-3">
@@ -26,23 +24,14 @@ export default function SingleQuizCard({
         <CardTitle className="text-[20px] leading-5">{questionNo}. {question}</CardTitle>
       </CardHeader>
       <CardContent>
-        {
-          options &&
-          <RadioGroup>
-          {options.map((option,index) => (
-            <SingleQuizCardOption key={index} option={option} value={option} />
-          ))}
-        </RadioGroup>
-        }
-      </CardContent>
-      <CardFooter>
-        {showAnwser && (
-          <div className="flex flex-col space-y-2">
-            <p className="text-gray-600">Correct Answer: {correctAnswer}</p>
-            <p className="text-gray-600">Answer Explain: {answerExplain}</p>
-          </div>
+        {options && (
+          <RadioGroup value={selectedAnswer} onValueChange={(value) => onAnswerChange(questionNo, value)}>
+            {options.map((option, index) => (
+              <SingleQuizCardOption key={index} option={option} value={option} />
+            ))}
+          </RadioGroup>
         )}
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 }

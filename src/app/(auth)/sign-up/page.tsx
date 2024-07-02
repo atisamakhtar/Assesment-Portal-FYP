@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 
 type Props = {};
 
+
 export default function SignupPage({}: Props) {
   const {
     fullName,
