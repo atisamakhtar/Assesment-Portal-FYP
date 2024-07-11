@@ -69,6 +69,7 @@ function AdminAnalytics() {
               <div>
                 <CardTitle className="text-xl font-semibold text-gray-700">{userData.user.fullName}</CardTitle>
                 <CardDescription className="text-sm text-gray-500">@{userData.user.userName}</CardDescription>
+                <CardDescription className="text-sm text-gray-500">@{userData.user.email}</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="py-4">
