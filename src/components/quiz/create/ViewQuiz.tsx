@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUser } from "@/store/useUserStore";
 import { useQuizStore } from "@/store/useQuizStore";
+import { useRouter } from "next/navigation";
 
 type Props = {
   loading: boolean;
@@ -49,7 +50,7 @@ export default function ViewQuiz({ loading, quizData }: Props) {
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const { user } = useUser();
   const { loading: submitLoading, submitCreateQuiz } = useQuizStore();
-
+  const router = useRouter();
   const handleAnswerChange = (questionNo: number, answer: string) => {
     setSelectedAnswers((prev) => ({ ...prev, [questionNo]: answer }));
   };
@@ -81,6 +82,7 @@ export default function ViewQuiz({ loading, quizData }: Props) {
 
     submitCreateQuiz(formData);
     localStorage.removeItem('quizSelections');
+    router.push('/dashboard/quiz');
   };
 
   return (
@@ -120,7 +122,7 @@ export default function ViewQuiz({ loading, quizData }: Props) {
               >
                 <FileDown size={18} className="mr-2" /> Export to PDF
               </Button>
-              <Button onClick={handleSubmit} disabled={submitLoading}>
+              <Button className="bg-black text-white" onClick={handleSubmit} disabled={submitLoading}>
                 {submitLoading ? "Loading..." : "Submit"}
               </Button>
             </div>

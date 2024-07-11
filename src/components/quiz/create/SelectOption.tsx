@@ -40,9 +40,9 @@ export default function SelectOption<T extends keyof TextFormSchemaType>({
       </FormControl>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>{label}</SelectLabel>
+          <SelectLabel className="bg-white">{label}</SelectLabel>
           {options.map((option) => (
-            <SelectItem key={option.id} value={option.id}>
+            <SelectItem className="bg-white" key={option.id} value={option.id}>
               {option.title}
             </SelectItem>
           ))}

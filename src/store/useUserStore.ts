@@ -1,6 +1,14 @@
-// useUserStore.ts
 import { create } from "zustand";
 import { useEffect } from "react";
+
+interface RegisterFormData {
+  fullName: string;
+  userName: string;
+  email: string;
+  educationLevel: string;
+  password: string;
+  confirmPassword: string;
+}
 
 export type UserStates = {
   fullName: string;
@@ -17,14 +25,16 @@ export type UserStates = {
   setPassword: (password: string) => void;
   setConfirmPassword: (confirmPassword: string) => void;
   setUser: (user: any) => void;
-  register: (formData: UserStates, router?: any) => Promise<void>;
+  register: (formData: RegisterFormData, router?: any) => Promise<void>;
   login: (credentials: { emailOrUsername: string; password: string }, router?: any) => Promise<void>;
   fetchUserData: () => Promise<void>;
   logout: (router?: any) => Promise<void>;
+  changePassword: (passwordData: { currentPassword: string, newPassword: string, confirmPassword: string }) => Promise<void>;
   registerLoading: boolean;
   loginLoading: boolean;
   fetchUserDataLoading: boolean;
   logoutLoading: boolean;
+  changePasswordLoading: boolean;
   registerErrorMessage: string | null;
   registerSuccessMessage: string | null;
   loginErrorMessage: string | null;
@@ -33,6 +43,12 @@ export type UserStates = {
   fetchUserDataSuccessMessage: string | null;
   logoutErrorMessage: string | null;
   logoutSuccessMessage: string | null;
+  changePasswordErrorMessage: string | null;
+  changePasswordSuccessMessage: string | null;
+  updateUserLoading: boolean;
+  updateUserErrorMessage: string | null;
+  updateUserSuccessMessage: string | null;
+  updateUserProfile: (profileData: { fullName: string, userName: string, email: string, educationLevel: string }) => Promise<void>;
 };
 
 export const useUserStore = create<UserStates>((set) => ({
@@ -47,6 +63,7 @@ export const useUserStore = create<UserStates>((set) => ({
   loginLoading: false,
   fetchUserDataLoading: false,
   logoutLoading: false,
+  changePasswordLoading: false,
   registerErrorMessage: null,
   registerSuccessMessage: null,
   loginErrorMessage: null,
@@ -55,6 +72,11 @@ export const useUserStore = create<UserStates>((set) => ({
   fetchUserDataSuccessMessage: null,
   logoutErrorMessage: null,
   logoutSuccessMessage: null,
+  changePasswordErrorMessage: null,
+  changePasswordSuccessMessage: null,
+  updateUserLoading: false,
+  updateUserErrorMessage: null,
+  updateUserSuccessMessage: null,
   setFullName: (fullName) => set({ fullName }),
   setUserName: (userName) => set({ userName }),
   setEmail: (email) => set({ email }),
@@ -79,25 +101,23 @@ export const useUserStore = create<UserStates>((set) => ({
         throw new Error(data.error || "Registration failed");
       }
 
-    
-
       const data = await response.json();
       set({ registerLoading: false, registerSuccessMessage: data.message });
       if (router) {
         router.push("/login");
       }
 
-        // Reset form and success message on successful registration
-        set({
-          fullName: "",
-          userName: "",
-          email: "",
-          educationLevel: "",
-          password: "",
-          confirmPassword: "",
-          registerSuccessMessage: null,
-          registerErrorMessage: null
-        });
+      // Reset form and success message on successful registration
+      set({
+        fullName: "",
+        userName: "",
+        email: "",
+        educationLevel: "",
+        password: "",
+        confirmPassword: "",
+        registerSuccessMessage: null,
+        registerErrorMessage: null,
+      });
     } catch (error: any) {
       set({ registerErrorMessage: error.message });
       console.error("Registration error:", error.message);
@@ -129,9 +149,9 @@ export const useUserStore = create<UserStates>((set) => ({
       }
 
       set({
-        loginSuccessMessage:null,
-        loginErrorMessage:null,
-      })
+        loginSuccessMessage: null,
+        loginErrorMessage: null,
+      });
     } catch (error: any) {
       set({ loginErrorMessage: error.message });
       console.error("Login error:", error.message);
@@ -184,6 +204,57 @@ export const useUserStore = create<UserStates>((set) => ({
       console.error("Logout error:", error.message);
     } finally {
       set({ logoutLoading: false });
+    }
+  },
+
+  changePassword: async ({ currentPassword, newPassword, confirmPassword }) => {
+    set({ changePasswordLoading: true, changePasswordErrorMessage: null, changePasswordSuccessMessage: null });
+    try {
+      const response = await fetch(`/api/user/changepassword`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ currentPassword, newPassword, confirmPassword }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to change password');
+      }
+
+      const data = await response.json();
+      set({ changePasswordSuccessMessage: data.message });
+    } catch (error: any) {
+      console.error('Change password error:', error.message);
+      set({ changePasswordErrorMessage: error.message });
+    } finally {
+      set({ changePasswordLoading: false });
+    }
+  },
+
+  updateUserProfile: async (profileData: { fullName: string, userName: string, email: string, educationLevel: string }) => {
+    set({ updateUserLoading: true, updateUserErrorMessage: null, updateUserSuccessMessage: null });
+    try {
+      const response = await fetch(`/api/user/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to update profile');
+      }
+
+      const data = await response.json();
+      set({ user: data.updatedUser });
+      set({ updateUserLoading: false, updateUserErrorMessage: null, updateUserSuccessMessage: data.message });
+    } catch (error: any) {
+      console.error('Update profile error:', error.message);
+      set({ updateUserLoading: false, updateUserErrorMessage: error.message });
     }
   },
 }));

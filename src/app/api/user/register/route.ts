@@ -1,6 +1,6 @@
 // api/register.ts
 import { connect } from "@/dbConfig/database";
-import { User } from "@/models/User";
+import { User, IUser } from "@/models/User";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
@@ -26,19 +26,38 @@ export async function POST(req: NextRequest) {
       educationLevel: string;
     };
 
+    // Validate if any required field is blank
+    if (!fullName || !userName || !email || !password || !confirmPassword || !educationLevel) {
+      return NextResponse.json(
+        { error: "Please fill in all fields" },
+        { status: 400 }
+      );
+    }
+
+    // Check for existing email or username
+
+    const existingEmailOrUsername = await User.findOne({ $or: [{ email }, { userName }]  });
+    if (existingEmailOrUsername) {
+      return NextResponse.json(
+        { error: "Email and Username already exists" },
+        { status: 400 }
+      );
+    }
+
     // Check for Existing Email
-    const existedEmail = await User.findOne({ email });
-    if (existedEmail) {
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
       return NextResponse.json(
         { error: "Email already exists" },
         { status: 400 }
       );
     }
 
-    const existedUserName = await User.findOne({ userName });
-    if (existedUserName) {
+    // Check for Existing Username
+    const existingUserName = await User.findOne({ userName });
+    if (existingUserName) {
       return NextResponse.json(
-        { error: "User Name already exists" },
+        { error: "Username already exists" },
         { status: 400 }
       );
     }
@@ -56,12 +75,13 @@ export async function POST(req: NextRequest) {
     const hashPassword = await bcrypt.hash(password, salt);
 
     // Create New User
-    const newUser = new User({
+    const newUser: IUser = new User({
       fullName,
       userName,
       email,
       password: hashPassword,
       educationLevel,
+      role:'user'
     });
     await newUser.save();
 

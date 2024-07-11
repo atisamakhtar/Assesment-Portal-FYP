@@ -18,3 +18,9 @@ export async function isAuthenticated(request: NextRequest) {
         throw new Error(error.message);
     }
 }
+
+export function isAdmin(user : any) {
+    // Check if the user's role is 'admin'
+    const admin = user && user.role === "admin";
+    return admin;
+}
