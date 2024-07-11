@@ -10,13 +10,12 @@ import { useRouter } from "next/navigation";
 type Props = {};
 
 export default function Header({}: Props) {
-  const { user, fetchUserDataLoading, logout } = useUser();
   const router = useRouter();
-
-  const handleLogout = async () => {
-    await logout(router);
-  };
-
+  const { user, fetchUserDataLoading , logout} = useUser();
+  const logoutFunc = async () => {
+    await logout();
+    router.push('/login')
+  }
   return (
     <>
       <header className="py-4 px-6 flex justify-between items-center bg-slate-900 shadow-md">
@@ -26,14 +25,23 @@ export default function Header({}: Props) {
 
         <Navbar />
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 relative">
           {fetchUserDataLoading ? (
             <p>Loading...</p>
-          ) : user ? (
+          ) : user?.role === "user" ? (
+            <Link href={"/dashboard/profile"}>
+              <Button variant={"onDark"}>User Dashboard</Button>
+            </Link>
+          ) : user?.role === "admin" ? (
             <>
-              <Button variant={"onDark"}>{user.fullName}</Button>
-              <Button variant={"onDark"} onClick={handleLogout}>Logout</Button>
+            <Link href={"/dashboard/admin"}>
+              <Button variant={"onDark"}>Admin Dashboard</Button>
+            </Link>
+              
+              <Button onClick={logoutFunc} variant={"onDark"}>Logout</Button>
+            
             </>
+            
           ) : (
             <>
               <Button variant={"onDark"} asChild>

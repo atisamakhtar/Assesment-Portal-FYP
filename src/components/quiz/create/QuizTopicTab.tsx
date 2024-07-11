@@ -172,7 +172,7 @@ export default function QuizTopicTab({ value,quizData,loading }: Props) {
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-              <Button>Generate Quiz</Button>
+              <Button className="bg-black text-white">Generate Quiz</Button>
             </CardFooter>
           </Card>
         </form>

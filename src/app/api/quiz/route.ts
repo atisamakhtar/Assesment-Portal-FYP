@@ -10,11 +10,20 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const { userId, quizSelections, quizData, score } = body;
+    
         const createQuiz = new Quiz({
-            userId, quizSelections, quizData, score
-        })
+          userId,
+          quizSelections,
+          quizData,
+          score
+        });
+    
+        // Save the quiz
         await createQuiz.save();
-        return NextResponse.json({ message: "Thank you for submitting the quiz" }, {status : 201});
+    
+        
+    
+        return NextResponse.json({ message: "Thank you for submitting the quiz" }, { status: 201 });
     } catch (error : any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }

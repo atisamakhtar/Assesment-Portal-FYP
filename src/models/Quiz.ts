@@ -7,7 +7,7 @@ export interface IQuiz extends Document {
     options: string[];
     correctAnswer: string;
     explanation: string;
-    selectedAnswer:string;
+    selectedAnswer: string;
   }>;
   score: number;
   quizSelections: {
@@ -70,15 +70,14 @@ const quizSchema: Schema<IQuiz> = new Schema<IQuiz>({
       required: true
     },
     selectedAnswer: {
-        type: String,
-        required: true
-      }
+      type: String,
+      required: true
+    }
   }],
   score: {
     type: Number,
     required: true
-  },
- 
+  }
 }, {
   timestamps: true
 });
