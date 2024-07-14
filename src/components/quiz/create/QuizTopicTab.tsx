@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/form";
 import { QuizType, TextFormSchemaType, textFormSchema } from "@/types/common";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@/store/useUserStore";
+import { useRouter } from "next/navigation";
 
 type Props = {
   value: string;
@@ -37,26 +39,32 @@ export default function QuizTopicTab({ value,quizData,loading }: Props) {
   const form = useForm<TextFormSchemaType>({
     resolver: zodResolver(textFormSchema),
   });
-
+  const {user} = useUser();
+  const router = useRouter();
   const saveToLocalStorage = (data: TextFormSchemaType) => {
     localStorage.setItem('quizSelections', JSON.stringify(data));
   };
   async function onSubmit(data: TextFormSchemaType) {
-    const fullData : quizType = {...data, quizOption: "topic"};
-    loading(true);
-
-    saveToLocalStorage(fullData)
-    const reponse = await fetch("/api/create-quiz", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text_quiz: fullData }),
-    });
-    const res = await reponse.json();
-    const result:QuizType[] = res.questions;
-    quizData(result);
-    loading(false);
+    if(user) {
+      const fullData : quizType = {...data, quizOption: "topic"};
+      loading(true);
+  
+      saveToLocalStorage(fullData)
+      const reponse = await fetch("/api/create-quiz", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text_quiz: fullData }),
+      });
+      const res = await reponse.json();
+      const result:QuizType[] = res.questions;
+      quizData(result);
+      loading(false);
+    }else{
+      router.push('/login');
+    }
+  
   }
 
   return (
