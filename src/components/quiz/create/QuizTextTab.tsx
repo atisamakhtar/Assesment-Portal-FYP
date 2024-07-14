@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/form";
 import { QuizType, textFormSchema,TextFormSchemaType } from "@/types/common";
 import { useState } from "react";
+import { useUser } from "@/store/useUserStore";
+import { useRouter } from "next/navigation";
 
 type Props = {
   value: string;
@@ -29,7 +31,8 @@ type quizType = TextFormSchemaType & {quizOption: string};
     
 
 export default function QuizTextTab({ value,quizData,loading }: Props) {
-
+  const {user} = useUser();
+  const router = useRouter();
   const form = useForm<TextFormSchemaType>({
     resolver: zodResolver(textFormSchema),
   });
@@ -45,21 +48,26 @@ export default function QuizTextTab({ value,quizData,loading }: Props) {
 
 
   async function onSubmit(data: TextFormSchemaType) {
-    const fullData : quizType = {...data, quizOption: "text"};
-    loading(true);
-
-    saveToLocalStorage(fullData)
-    const reponse = await fetch("/api/create-quiz", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text_quiz: fullData }),
-    });
-    const res = await reponse.json();
-    const result:QuizType[] = res.questions;
-    quizData(result);
-    loading(false);
+    if(user){
+      const fullData : quizType = {...data, quizOption: "text"};
+      loading(true);
+  
+      saveToLocalStorage(fullData)
+      const reponse = await fetch("/api/create-quiz", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text_quiz: fullData }),
+      });
+      const res = await reponse.json();
+      const result:QuizType[] = res.questions;
+      quizData(result);
+      loading(false);
+    }else{
+      router.push("/login");
+    }
+    
   }
 
   return (
